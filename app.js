@@ -1,6 +1,7 @@
 import express from "express";
 import 'dotenv/config';
 import bodyParser from "body-parser";
+import userRouter from "./routes/userRouter.js";
 
 const app = express();
 
@@ -11,6 +12,15 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded());
 
 // Base routes here
+app.get("/", (req, res) => {
+  res.render("index");
+});
+
+app.use("/sign-up", userRouter);
+
+app.use("/", (req, res) => {
+  res.send("Not found");
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
