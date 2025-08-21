@@ -2,6 +2,7 @@ import {
   createUser
 } from "../db/userQueries.js";
 import { validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
 
 function newUserGet(req, res) {
   res.render("signUp", {
@@ -13,10 +14,10 @@ function newUserGet(req, res) {
   });
 }
 
-async function newUserPost(req, res) {
-  const { firstName, lastName, username } = req.body;
+async function newUserPost(req, res, next) {
+  const { firstName, lastName, username, password } = req.body;
   const result = validationResult(req);
-  console.log(result.array());
+  
   if (!result.isEmpty()) {
     const formattedErrors = {};
 
@@ -32,9 +33,14 @@ async function newUserPost(req, res) {
       errors: formattedErrors,
     });
   } else {
-    // hash password before sending to DB
-    // await createUser();
-    res.redirect("/");
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await createUser(firstName, lastName, username, hashedPassword);
+      res.redirect("/");
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
   }
   
 }

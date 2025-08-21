@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { newUserGet, newUserPost } from "../controllers/userController.js";
 import { body } from "express-validator";
+import {
+  findUsername
+} from "../db/userQueries.js";
 
 const userRouter = Router();
 
@@ -8,8 +11,8 @@ userRouter.get("/", newUserGet);
 userRouter.post(
   "/",
   body("username").custom(async (value) => {
-    const existingUsername = true; // TODO: find username
-    if (existingUsername) {
+    const existingUsername = await findUsername(value);
+    if (existingUsername.length) {
       throw new Error("This username is unavailable.");
     }
     return true;
