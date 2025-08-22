@@ -8,6 +8,12 @@
 </head>
 <body>
   <h1>Message board</h1>
-  <a href="/sign-up">Sign up</a>
+  <% if (locals.user) { %>
+    <p>Welcome <%= user.username %></p>
+    <a href="/logout">Log out</a>
+  <% } else { %>
+    <a href="/sign-up">Sign up</a>
+    <a href="/login">Log in</a>
+  <% } %>
 </body>
 </html>
