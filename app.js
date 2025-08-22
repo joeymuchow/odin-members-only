@@ -2,6 +2,7 @@ import express from "express";
 import 'dotenv/config';
 import bodyParser from "body-parser";
 import userRouter from "./routes/userRouter.js";
+import clubRouter from "./routes/clubRouter.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/sign-up", userRouter);
+app.use("/club", clubRouter);
 
 app.use("/", (req, res) => {
   res.send("Not found");
