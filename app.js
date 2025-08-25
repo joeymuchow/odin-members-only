@@ -3,6 +3,7 @@ import "dotenv/config";
 import bodyParser from "body-parser";
 import userRouter from "./routes/userRouter.js";
 import clubRouter from "./routes/clubRouter.js";
+import messageRouter from "./routes/messageRouter.js";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
@@ -77,6 +78,7 @@ app.get("/", (req, res) => {
 
 app.use("/sign-up", userRouter);
 app.use("/club", clubRouter);
+app.use("/new-message", messageRouter);
 
 // authentication
 app.get("/login", (req, res) => {
