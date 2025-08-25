@@ -1,13 +1,18 @@
 import { validationResult } from "express-validator";
+import { newClubMember } from "../db/clubQueries.js";
 
 function clubGet(req, res) {
-  res.render("club", {
-    message: "",
-  });
+  if (!req.user) {
+    res.redirect("/");
+  } else {
+    res.render("club", {
+      message: "",
+    });
+  }
 }
 
-function clubPost(req, res) {
-  const { clubPassword } = req.body;
+async function clubPost(req, res) {
+  const { id } = req.user;
   const result = validationResult(req);
 
   if (!result.isEmpty()) {
@@ -15,7 +20,8 @@ function clubPost(req, res) {
       message: result.array()[0].msg
     });
   } else {
-    // call to make user a club member
+    await newClubMember(id);
+    res.redirect("/");
   }
 }
 

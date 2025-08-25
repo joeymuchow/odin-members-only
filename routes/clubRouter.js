@@ -7,7 +7,7 @@ const clubRouter = Router();
 clubRouter.get("/", clubGet);
 clubRouter.post(
   "/",
-  body("clubPassword").equals("Go Beavs").withMessage("Sorry, better luck next time."),
+  body("clubPassword").equals("Get outta my way!").withMessage("Sorry, better luck next time."),
   clubPost
 );
 
