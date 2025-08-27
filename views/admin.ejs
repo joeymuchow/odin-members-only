@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin</title>
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/form.css">
+</head>
+<body>
+  <h1>Become an Admin</h1>
+  <p><%= message %></p>
+  <form action="/admin" method="post">
+    <div class="input-group">
+      <label for="admin-password">Enter the admin phrase:</label>
+      <input type="password" name="adminPassword" id="admin-password" required>
+    </div>
+    <div class="btn-container">
+      <button class="submit-btn" type="submit">Submit</button>
+    </div>
+  </form>
+</body>
+</html>

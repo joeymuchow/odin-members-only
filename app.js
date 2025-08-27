@@ -3,6 +3,7 @@ import "dotenv/config";
 import bodyParser from "body-parser";
 import userRouter from "./routes/userRouter.js";
 import clubRouter from "./routes/clubRouter.js";
+import adminRouter from "./routes/adminRouter.js";
 import messageRouter from "./routes/messageRouter.js";
 import session from "express-session";
 import passport from "passport";
@@ -79,6 +80,7 @@ app.get("/", (req, res) => {
 app.use("/sign-up", userRouter);
 app.use("/club", clubRouter);
 app.use("/new-message", messageRouter);
+app.use("/admin", adminRouter);
 
 // authentication
 app.get("/login", (req, res) => {
