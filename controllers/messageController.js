@@ -1,8 +1,8 @@
-import { newMessage } from "../db/messageQueries.js";
+import { deleteMessage, newMessage } from "../db/messageQueries.js";
 
 function newMessageGet(req, res) {
   res.render("newMessage", {
-    url: "/new-message",
+    url: "/message/new",
   });
 }
 
@@ -15,4 +15,11 @@ async function newMessagePost(req, res) {
   res.redirect("/");
 }
 
-export { newMessageGet, newMessagePost }
+async function deleteMessageGet(req, res) {
+  const { id } = req.params;
+
+  await deleteMessage(id);
+  res.redirect("/");
+}
+
+export { newMessageGet, newMessagePost, deleteMessageGet }

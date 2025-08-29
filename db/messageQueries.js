@@ -9,4 +9,8 @@ async function getMessages() {
   return rows;
 }
 
-export { newMessage, getMessages }
+async function deleteMessage(id) {
+  await pool.query("DELETE FROM messages WHERE id = $1", [id]);
+}
+
+export { newMessage, getMessages, deleteMessage }

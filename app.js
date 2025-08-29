@@ -101,6 +101,7 @@ async function getMessagesMiddleware(req, res, next) {
     });
     for (const message of messages) {
       const messageObj = {};
+      messageObj.id = message.id;
       messageObj.title = message.title;
       messageObj.text = message.message;
       messageObj.date = dateTimeFormat.format(message.timestamp);
@@ -122,7 +123,7 @@ app.get("/", getMessagesMiddleware, (req, res) => {
 
 app.use("/sign-up", userRouter);
 app.use("/club", clubRouter);
-app.use("/new-message", messageRouter);
+app.use("/message", messageRouter);
 app.use("/admin", adminRouter);
 
 // authentication

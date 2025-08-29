@@ -15,7 +15,7 @@
       <p>Welcome <%= user.username %></p>
     <% } %>
     <a href="/logout">Log out</a>
-    <a href="/new-message">Create a new message</a>
+    <a href="/message/new">Create a new message</a>
     <% if (!user.member) { %>
       <a href="/club">Join the club</a>
     <% } %>
@@ -32,7 +32,7 @@
             <p><%= message.date %></p>
           <% } %>
           <% if (user.admin) { %>
-            <a href="/delete-message">Delete</a>
+            <a href="/message/<%= message.id %>/delete">Delete</a>
           <% } %>
         </div>
       <% }); %>
