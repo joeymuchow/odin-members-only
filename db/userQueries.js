@@ -20,4 +20,10 @@ async function findUserById(id) {
   return rows;
 }
 
-export { createUser, findUsername, findUserById };
+async function findUsersFromIds(ids) {
+  const placeholders = ids.map((_, i) => `$${i + 1}`).join(', ');
+  const { rows } = await pool.query(`SELECT * FROM users WHERE id IN (${placeholders})`, ids);
+  return rows;
+}
+
+export { createUser, findUsername, findUserById, findUsersFromIds };

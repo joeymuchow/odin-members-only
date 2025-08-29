@@ -9,10 +9,15 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
-import { findUserById, findUsername } from "./db/userQueries.js";
+import {
+  findUserById,
+  findUsername,
+  findUsersFromIds,
+} from "./db/userQueries.js";
 import connectPgSimple from "connect-pg-simple";
 import pool from "./db/pool.js";
 import flash from "connect-flash";
+import { getMessages } from "./db/messageQueries.js";
 
 const app = express();
 
@@ -72,9 +77,47 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+async function getMessagesMiddleware(req, res, next) {
+  const { user } = req;
+  req.messages = [];
+
+  if (user) {
+    const messages = await getMessages();
+    console.log(messages);
+    const userIds = [];
+    for (const message of messages) {
+      if (!userIds.includes(message.user_id)) {
+        userIds.push(message.user_id);
+      }
+    }
+    console.log(userIds);
+    const users = await findUsersFromIds(userIds);
+
+    const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    for (const message of messages) {
+      const messageObj = {};
+      messageObj.title = message.title;
+      messageObj.text = message.message;
+      messageObj.date = dateTimeFormat.format(message.timestamp);
+      const user = users.filter((value) => {
+        return value.id === message.user_id;
+      });
+      messageObj.author = user[0].username;
+      req.messages.push(messageObj);
+    }
+  }
+
+  next();
+}
+
 // Base routes here
-app.get("/", (req, res) => {
-  res.render("index", { user: req.user });
+app.get("/", getMessagesMiddleware, (req, res) => {
+  res.render("index", { user: req.user, messages: req.messages });
 });
 
 app.use("/sign-up", userRouter);
@@ -84,7 +127,7 @@ app.use("/admin", adminRouter);
 
 // authentication
 app.get("/login", (req, res) => {
-  const errorMessage = req.flash('error');
+  const errorMessage = req.flash("error");
   res.render("login", {
     message: errorMessage,
   });

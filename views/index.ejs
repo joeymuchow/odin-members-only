@@ -22,6 +22,21 @@
     <% if (!user.admin) { %>
       <a href="/admin">Become an Admin</a>
     <% } %>
+    <div class="messages">
+      <% messages.forEach(function(message) { %>
+        <div class="message">
+          <h4><%= message.title %></h4>
+          <p><%= message.text %></p>
+          <% if (user.member) { %>
+            <p><%= message.author %></p>
+            <p><%= message.date %></p>
+          <% } %>
+          <% if (user.admin) { %>
+            <a href="/delete-message">Delete</a>
+          <% } %>
+        </div>
+      <% }); %>
+    </div>
   <% } else { %>
     <a href="/sign-up">Sign up</a>
     <a href="/login">Log in</a>
