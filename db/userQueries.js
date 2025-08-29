@@ -21,6 +21,7 @@ async function findUserById(id) {
 }
 
 async function findUsersFromIds(ids) {
+  if (!ids.length) return [];
   const placeholders = ids.map((_, i) => `$${i + 1}`).join(', ');
   const { rows } = await pool.query(`SELECT * FROM users WHERE id IN (${placeholders})`, ids);
   return rows;

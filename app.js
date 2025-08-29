@@ -83,22 +83,22 @@ async function getMessagesMiddleware(req, res, next) {
 
   if (user) {
     const messages = await getMessages();
-    console.log(messages);
     const userIds = [];
+
     for (const message of messages) {
       if (!userIds.includes(message.user_id)) {
         userIds.push(message.user_id);
       }
     }
-    console.log(userIds);
-    const users = await findUsersFromIds(userIds);
 
+    const users = await findUsersFromIds(userIds);
     const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
     });
+
     for (const message of messages) {
       const messageObj = {};
       messageObj.id = message.id;
