@@ -4,7 +4,7 @@ async function newMessage(title, message, timestamp, userId) {
   try {
     await pool.query("INSERT INTO messages (title, message, timestamp, user_id) VALUES ($1, $2, $3, $4)", [title, message, timestamp, userId]);
   } catch (e) {
-    console.error("Query error: " + e);
+    console.error("Query " + e + " - messageQueries.js - newMessage");
     return {error: e};
   }
   
