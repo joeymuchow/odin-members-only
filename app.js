@@ -81,36 +81,34 @@ async function getMessagesMiddleware(req, res, next) {
   const { user } = req;
   req.messages = [];
 
-  if (user) {
-    const messages = await getMessages();
-    const userIds = [];
+  const messages = await getMessages();
+  const userIds = [];
 
-    for (const message of messages) {
-      if (!userIds.includes(message.user_id)) {
-        userIds.push(message.user_id);
-      }
+  for (const message of messages) {
+    if (!userIds.includes(message.user_id)) {
+      userIds.push(message.user_id);
     }
+  }
 
-    const users = await findUsersFromIds(userIds);
-    const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+  const users = await findUsersFromIds(userIds);
+  const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  for (const message of messages) {
+    const messageObj = {};
+    messageObj.id = message.id;
+    messageObj.title = message.title;
+    messageObj.text = message.message;
+    messageObj.date = dateTimeFormat.format(message.timestamp);
+    const user = users.filter((value) => {
+      return value.id === message.user_id;
     });
-
-    for (const message of messages) {
-      const messageObj = {};
-      messageObj.id = message.id;
-      messageObj.title = message.title;
-      messageObj.text = message.message;
-      messageObj.date = dateTimeFormat.format(message.timestamp);
-      const user = users.filter((value) => {
-        return value.id === message.user_id;
-      });
-      messageObj.author = user[0].username;
-      req.messages.push(messageObj);
-    }
+    messageObj.author = user[0].username;
+    req.messages.push(messageObj);
   }
 
   next();

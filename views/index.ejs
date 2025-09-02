@@ -7,39 +7,48 @@
   <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-  <h1>Message board</h1>
-  <% if (user) { %>
-    <% if (user.admin) { %>
-      <p>Hello Admin <%= user.username %></p>
+  <section>
+    <h1>Message board</h1>
+    <% if (user) { %>
+      <% if (user.admin) { %>
+        <p class="welcome">Hello Admin <%= user.username %></p>
+      <% } else { %>
+        <p class="welcome">Welcome <%= user.username %></p>
+      <% } %>
+      <div class="links">
+        <a href="/logout">Log out</a>
+        <a href="/message/new">New message</a>
+        <% if (!user.member) { %>
+          <a href="/club">Join the club</a>
+        <% } %>
+        <% if (!user.admin) { %>
+          <a href="/admin">Become an Admin</a>
+        <% } %>
+      </div>
     <% } else { %>
-      <p>Welcome <%= user.username %></p>
+      <div class="links">
+        <a href="/sign-up">Sign up</a>
+        <a href="/login">Log in</a>
+      </div>
     <% } %>
-    <a href="/logout">Log out</a>
-    <a href="/message/new">Create a new message</a>
-    <% if (!user.member) { %>
-      <a href="/club">Join the club</a>
-    <% } %>
-    <% if (!user.admin) { %>
-      <a href="/admin">Become an Admin</a>
-    <% } %>
+  </section>
+  <section>
+    <h3>Messages</h3>
     <div class="messages">
       <% messages.forEach(function(message) { %>
         <div class="message">
-          <h4><%= message.title %></h4>
-          <p><%= message.text %></p>
-          <% if (user.member) { %>
-            <p><%= message.author %></p>
-            <p><%= message.date %></p>
+          <h4 class="title"><%= message.title %></h4>
+          <p class="text"><%= message.text %></p>
+          <% if (user && (user.member || user.admin)) { %>
+            <p class="author"><%= message.author %></p>
+            <p class="date"><%= message.date %></p>
           <% } %>
-          <% if (user.admin) { %>
-            <a href="/message/<%= message.id %>/delete">Delete</a>
+          <% if (user && user.admin) { %>
+            <a class="delete" href="/message/<%= message.id %>/delete">Delete</a>
           <% } %>
         </div>
       <% }); %>
     </div>
-  <% } else { %>
-    <a href="/sign-up">Sign up</a>
-    <a href="/login">Log in</a>
-  <% } %>
+  </section>
 </body>
 </html>
